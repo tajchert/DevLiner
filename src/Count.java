@@ -26,14 +26,17 @@ public class Count {
 		tmpp.makeProjects(f);
 		tmpp.updateProjects(f);
 		//tmpp.getFileCount(f, 0);
-		System.out.println(tmpp.showHistory("A"));
+		//System.out.println(tmpp.showHistory("A"));
+		
+		tmpp.findProject("A").updateMaxDailyHistory();
+		System.out.println(tmpp.findProject("A").getProjectHistory());
 		tmpp.writeFile();
 	}
 	
 	public String showHistory(String name){
 		String res = "History, of: "+name +": ";
 		Project tmp = findProject(name);
-		res += tmp.getHistory();
+		//res += tmp.getHistory();
 		return res;
 	}
 	

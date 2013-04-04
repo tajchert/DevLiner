@@ -1,12 +1,10 @@
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 
 
 public class Project implements Serializable{
@@ -17,7 +15,8 @@ public class Project implements Serializable{
 	private String notes;			//Private Notes
 	private int lines = 0;			//Temporary value for counting methods (if number of lines has changed)
 	
-	public Map<Date,Integer> history = new HashMap<Date,Integer>();
+	ArrayList<DateAndLines> datesAndLines = new ArrayList<DateAndLines>();		//Store all value of lines - save by each check
+	HashMap<String, Integer> daysAndLines = new HashMap<String, Integer>();		//Store only day and biggest value in that day of lines
 	
 	
 	
@@ -28,8 +27,24 @@ public class Project implements Serializable{
 		setLineNumber(walk(Count.dirStart+"//"+name));
 	}
 	
-	public String getHistory(){
-		return history+"";
+	public void updateMaxDailyHistory(){
+		
+		int max = 0;
+		for(DateAndLines item: datesAndLines){
+			if(daysAndLines.size()==0){
+				daysAndLines.put(item.getDate(), item.lineNumber);
+				System.out.println("AA");
+			}
+			if(item.lineNumber>(int)daysAndLines.get(item.getDate())){
+				System.out.println((int)daysAndLines.get(item.getDate()));
+				daysAndLines.remove(item.getDate());
+				
+				daysAndLines.put(item.getDate(), item.lineNumber);
+				System.out.println(daysAndLines.get(item.getDate()));
+				//System.out.println("retrieved element: " + daysAndLines);
+			}
+			
+			}
 	}
 	
 	public void updateLineNumber(){
@@ -93,7 +108,8 @@ public class Project implements Serializable{
 	public void setLineNumber(int lineNumber) {
 		Date date = new Date();
 		this.lineNumber = lineNumber;
-		history.put(date, lineNumber);
+		datesAndLines.add(new DateAndLines(date, lineNumber));
+		//history.put(date, lineNumber);
 	}
 	public void setDescription(String desc){
 		this.description = desc;
@@ -103,12 +119,16 @@ public class Project implements Serializable{
 	}
 	
 	//GETTERS
+	public String getProjectHistory(){
+		return datesAndLines+"";
+	}
 	public int getLines(){
 		int res = this.lineNumber;
 		return res;
 	}
-	public int getLinesAtDate(Date date){
-		int res = history.get(date);
+	public int getLinesAtDate(Date date){//TODO
+		int res = 0;
+		//int res = history.get(date);
 		return res;
 	}
 
