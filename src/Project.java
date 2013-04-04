@@ -135,6 +135,4 @@ public class Project implements Serializable{
 	public String getNotes() {
 		return notes;
 	}
-
-	
 }
