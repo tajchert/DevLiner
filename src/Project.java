@@ -27,29 +27,36 @@ public class Project implements Serializable{
 		setLineNumber(walk(Count.dirStart+"//"+name));
 	}
 	
-	public void updateMaxDailyHistory(){
-		
-		int max = 0;
+	private void updateMaxDailyHistory(){
 		for(DateAndLines item: datesAndLines){
 			if(daysAndLines.size()==0){
 				daysAndLines.put(item.getDate(), item.lineNumber);
-				System.out.println("AA");
 			}
-			if(item.lineNumber>(int)daysAndLines.get(item.getDate())){
+			if(daysAndLines==null){
+				daysAndLines.put(item.getDate(), item.lineNumber);
+			}
+			if(item.lineNumber!=(int)daysAndLines.get(item.getDate())){
 				System.out.println((int)daysAndLines.get(item.getDate()));
 				daysAndLines.remove(item.getDate());
-				
 				daysAndLines.put(item.getDate(), item.lineNumber);
-				System.out.println(daysAndLines.get(item.getDate()));
+				System.out.println("AA");
+				System.out.println("!"+daysAndLines);
 				//System.out.println("retrieved element: " + daysAndLines);
 			}
 			
 			}
 	}
+	public void showHistoryDays(){
+		System.out.println("!"+daysAndLines);
+	}
 	
 	public void updateLineNumber(){
 		lines = 0;
+		int tmp = lineNumber;
 		setLineNumber(walk(Count.dirStart+"//"+name));
+		if(tmp!= lineNumber){
+			updateMaxDailyHistory();
+		}
 	}
 	
 	//Important methods

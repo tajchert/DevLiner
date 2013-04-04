@@ -20,7 +20,7 @@ public class DateAndLines implements Serializable{
 
 	@Override
 	public String toString() {
-		return "DateAndLines [date=" + date + ", lineNumber=" + lineNumber+ "]";
+		return "Day [" + date + ", " + lineNumber+ "]";
 	}
 
 }

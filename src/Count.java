@@ -1,15 +1,11 @@
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.StreamCorruptedException;
 import java.util.ArrayList;
-import java.util.Collections;
 
 
 public class Count {
@@ -27,9 +23,9 @@ public class Count {
 		tmpp.updateProjects(f);
 		//tmpp.getFileCount(f, 0);
 		//System.out.println(tmpp.showHistory("A"));
-		
-		tmpp.findProject("A").updateMaxDailyHistory();
-		System.out.println(tmpp.findProject("A").getProjectHistory());
+		tmpp.findProject("A").showHistoryDays();
+		//tmpp.findProject("A").updateMaxDailyHistory();
+		//System.out.println(tmpp.findProject("A").getProjectHistory());
 		tmpp.writeFile();
 	}
 	
