@@ -15,8 +15,11 @@ public class Project implements Serializable{
 	public String name;			//Project name ->title of folder
 	public String description;		//Later on added description 
 	private String notes;			//Private Notes
-	private int lines = 0; 				
+	private int lines = 0;			//Temporary value for counting methods (if number of lines has changed)
+	
 	public Map<Date,Integer> history = new HashMap<Date,Integer>();
+	
+	
 	
 	
 	public Project(String name){
@@ -24,6 +27,11 @@ public class Project implements Serializable{
 		lines = 0;
 		setLineNumber(walk(Count.dirStart+"//"+name));
 	}
+	
+	public String getHistory(){
+		return history+"";
+	}
+	
 	public void updateLineNumber(){
 		lines = 0;
 		setLineNumber(walk(Count.dirStart+"//"+name));

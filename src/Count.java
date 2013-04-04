@@ -25,12 +25,17 @@ public class Count {
 		tmpp.readFile();
 		tmpp.makeProjects(f);
 		tmpp.updateProjects(f);
-        
 		//tmpp.getFileCount(f, 0);
+		System.out.println(tmpp.showHistory("A"));
 		tmpp.writeFile();
 	}
 	
-	
+	public String showHistory(String name){
+		String res = "History, of: "+name +": ";
+		Project tmp = findProject(name);
+		res += tmp.getHistory();
+		return res;
+	}
 	
 	public void makeProjects(File f){
 		System.out.println(listOfProjects);
@@ -50,15 +55,19 @@ public class Count {
 		for (File file : listOfFiles){
             if (file.isDirectory()){
             	if(isProjectOnList(file.getName())){
-            		for(Project searched : listOfProjects){
-            	        if(searched.name.equals(file.getName())){
-            	        	searched.updateLineNumber();
-            	        	System.out.println(searched);
-            	        }
-            	    }
+            		findProject(file.getName()).updateLineNumber();
             	}
             }
         }
+	}
+	private Project findProject(String name){
+		Project res = null;
+		for(Project searched : listOfProjects){
+	        if(searched.name.equals(name)){
+	        	res = searched;
+	        }
+	    }
+		return res;
 	}
 	private boolean isProjectOnList(String name){
 		if(listOfProjects.isEmpty()){
