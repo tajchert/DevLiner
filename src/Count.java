@@ -10,14 +10,14 @@ import java.util.ArrayList;
 
 public class Count {
 
-	final static String dirStart ="D://Dropbox//Documents//Android//testingDevLiner";
+	final static String dirStart ="D://Dropbox//Documents//Android//testingDevLiner";		//Directory for basic operations - r&w files
+	static ArrayList<Project> listOfProjects = new ArrayList<Project>();		//List of all projects
 	boolean deleteOld = true;
 	
-	ArrayList<Project> listOfProjects = new ArrayList<Project>();
+	
 	
 	public static void main(String[] args) {
 		Count tmpp = new Count();
-		
 		File f = new File(dirStart);
 		tmpp.readFile();
 		tmpp.makeProjects(f);
@@ -27,7 +27,9 @@ public class Count {
 		tmpp.findProject("A").showHistoryDays();
 		//tmpp.findProject("A").updateMaxDailyHistory();
 		//System.out.println(tmpp.findProject("A").getProjectHistory());
+		ExporterToJS expJS = new ExporterToJS(listOfProjects);
 		tmpp.writeFile();
+		System.out.println(expJS.show());
 	}
 	
 	public String showHistory(String name){

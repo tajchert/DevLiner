@@ -14,8 +14,10 @@ public class Project implements Serializable{
 	public int lineNumber;			//Current number of lines
 	public String name;			//Project name ->title of folder
 	public String description;		//Later on added description 
+	public Date DateOfCreation;		//date when project was object project was created -> would be oldest date in project
 	private String notes;			//Private Notes
 	private int lines = 0;			//Temporary value for counting methods (if number of lines has changed)
+	
 	private Format  dateFormatPrecise = new SimpleDateFormat("dd/MM/YYYY");
 	
 	ArrayList<DateAndLines> datesAndLines = new ArrayList<DateAndLines>();		//Store all value of lines - save by each check
@@ -25,6 +27,7 @@ public class Project implements Serializable{
 	
 	
 	public Project(String name){
+		DateOfCreation = new Date();
 		this.name = name;
 		lines = 0;
 		setLineNumber(walk(Count.dirStart+"//"+name));
@@ -139,6 +142,9 @@ public class Project implements Serializable{
 	}
 	
 	//GETTERS
+	public Date getCreationDate(){
+		return DateOfCreation;
+	}
 	public String getProjectHistory(){
 		return datesAndLines+"";
 	}
