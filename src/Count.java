@@ -29,7 +29,7 @@ public class Count {
 		//System.out.println(tmpp.findProject("A").getProjectHistory());
 		ExporterToJS expJS = new ExporterToJS(listOfProjects);
 		tmpp.writeFile();
-		System.out.println(expJS.show());
+		expJS.createFile();
 	}
 	
 	public String showHistory(String name){

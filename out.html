@@ -37,4 +37,30 @@ $(function () {
                 }
             },
             
-            series: [
+            series: [{
+name: 'A',
+data: [[Date.UTC(2013, 04, 06), 5],
+]
+},{
+name: 'B',
+data: [[Date.UTC(2013, 04, 06), 13],
+]
+},{
+name: 'C',
+data: [[Date.UTC(2013, 04, 06), 0],
+]
+}]
+        });
+    });
+    
+
+		</script>
+	</head>
+	<body>
+<script src="js/highcharts.js"></script>
+<script src="js/modules/exporting.js"></script>
+
+<div id="container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+
+	</body>
+</html>

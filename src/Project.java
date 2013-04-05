@@ -5,8 +5,10 @@ import java.io.Serializable;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 
 public class Project implements Serializable{
@@ -14,11 +16,12 @@ public class Project implements Serializable{
 	public int lineNumber;			//Current number of lines
 	public String name;			//Project name ->title of folder
 	public String description;		//Later on added description 
-	public Date DateOfCreation;		//date when project was object project was created -> would be oldest date in project
+	public Calendar DateOfCreation;		//date when project was object project was created -> would be oldest date in project
 	private String notes;			//Private Notes
 	private int lines = 0;			//Temporary value for counting methods (if number of lines has changed)
+	private String chartData; 		//Data to present on chart
 	
-	private Format  dateFormatPrecise = new SimpleDateFormat("dd/MM/YYYY");
+	private Format  dateFormatPrecise = new SimpleDateFormat("YYYY, MM, dd");
 	
 	ArrayList<DateAndLines> datesAndLines = new ArrayList<DateAndLines>();		//Store all value of lines - save by each check
 	HashMap<String, Integer> daysAndLines = new HashMap<String, Integer>();		//Store only day and biggest value in that day of lines
@@ -27,7 +30,8 @@ public class Project implements Serializable{
 	
 	
 	public Project(String name){
-		DateOfCreation = new Date();
+		DateOfCreation = Calendar.getInstance();
+		
 		this.name = name;
 		lines = 0;
 		setLineNumber(walk(Count.dirStart+"//"+name));
@@ -62,8 +66,8 @@ public class Project implements Serializable{
 		setLineNumber(walk(Count.dirStart+"//"+name));
 		if(tmp!= lineNumber || daysAndLines.size()==0){
 			System.out.println("Change.");
-			Date date = new Date();
-			String dateDay = dateFormatPrecise.format(date);
+			Calendar date = Calendar.getInstance();
+			String dateDay = dateFormatPrecise.format(date.getTime());
 			if(daysAndLines==null || daysAndLines.size()==0){
 				System.out.println("Making list");
 				daysAndLines.put(dateDay, lineNumber);
@@ -129,7 +133,7 @@ public class Project implements Serializable{
 	
 	//SETTERS
 	public void setLineNumber(int lineNumber) {
-		Date date = new Date();
+		Calendar date = Calendar.getInstance();
 		this.lineNumber = lineNumber;
 		datesAndLines.add(new DateAndLines(date, lineNumber));
 		//history.put(date, lineNumber);
@@ -142,7 +146,20 @@ public class Project implements Serializable{
 	}
 	
 	//GETTERS
-	public Date getCreationDate(){
+	
+	public String getChartData(){
+		chartData="";
+		Iterator it = daysAndLines.entrySet().iterator();
+	    while (it.hasNext()) {
+	        Map.Entry pairs = (Map.Entry)it.next();
+	        chartData += "[Date.UTC("+pairs.getKey()+"), "+pairs.getValue()+"],\n";
+	        //System.out.println(pairs.getKey() + " = " + pairs.getValue());
+	        it.remove(); // avoids a ConcurrentModificationException
+	    }
+	    //[Date.UTC(1970,  9, 27), 0   ],
+		return chartData;
+	}
+	public Calendar getCreationDate(){
 		return DateOfCreation;
 	}
 	public String getProjectHistory(){
@@ -152,7 +169,7 @@ public class Project implements Serializable{
 		int res = this.lineNumber;
 		return res;
 	}
-	public int getLinesAtDate(Date date){//TODO
+	public int getLinesAtDate(Calendar date){//TODO
 		int res = 0;
 		//int res = history.get(date);
 		return res;

@@ -7,6 +7,7 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 
@@ -17,7 +18,8 @@ public class ExporterToJS {
 	ArrayList<Project> projectsList = new ArrayList<Project>();		//List of project to print
 	String fileOutName;		//By default it would be today date but in future overriding same file would be possible
 	String fileBeginName="chartBegin.part";
-	String beginHTML;
+	String fileEndName="chartEnd.part";
+	String tmpHTML;
 	String Output;
 	
 	public ExporterToJS(ArrayList<Project> inputList){
@@ -25,24 +27,39 @@ public class ExporterToJS {
 		
 	}
 	
-	private void createFile(){
+	public void createFile(){
 		//Reading beginning of file
 		try {
-			beginHTML=readFile(fileBeginName);
+			tmpHTML=readFile(fileBeginName);
 		} catch (IOException e) {
 			System.out.println("Problem with fileBeginName read");
 			e.printStackTrace();
 		}
 		//END
-		Date oldesOne = new Date();
+		//Adding data for each project
+		Output =tmpHTML;
+		Calendar oldesOne = Calendar.getInstance();
 		int c = 0;
 		while(c < projectsList.size()){
-			if(projectsList.get(c).getCreationDate().before(oldesOne)){
-				oldesOne = projectsList.get(c).getCreationDate();
+			//name: 'Winter 2007-2008',
+			if(c>0){
+				Output +=",";
 			}
+			Output += "{\nname: '"+projectsList.get(c).name +"',\ndata: [";
+			Output +=projectsList.get(c).getChartData() +"]\n}";
 			c++;
 		}
-		oldesOne.setSeconds(0);
+		//END
+		// Reading end of file
+		try {
+			tmpHTML = readFile(fileEndName);
+		} catch (IOException e) {
+			System.out.println("Problem with fileBeginName read");
+			e.printStackTrace();
+		}
+		// END
+		Output +=tmpHTML;
+		saveFile();
 		//Adding dates all between minimum and today
 		//adding middle code
 		//adding series - one for each project
@@ -54,7 +71,7 @@ public class ExporterToJS {
 	
 	
 	public String show(){//For testing
-		return beginHTML;//TODO delete it
+		return tmpHTML;//TODO delete it
 	}
 	
 	
@@ -75,7 +92,7 @@ public class ExporterToJS {
 		 BufferedWriter out;
 		try {
 			out = new BufferedWriter(new FileWriter("out.html"));
-			out.write("aString\nthis is a\nttest");
+			out.write(Output);
 	        out.close();
 		} catch (IOException e) {
 			System.out.println("Saving failed!");
