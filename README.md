@@ -2,16 +2,19 @@ DevLiner
 ========
 Count and render nice charts of progress in your projects!
 -------------- 
-Java program to count number of code lines in your workspace, organize it into Projects and keep history of line number in each of them. After that it would generate a HTML page with charts (using Highcharts) so you can easily share it.
+Java program to count number of code lines in your workspace, organize it into Projects and keep history of line number in each of them. After that it will generate a HTML page with charts (using Highcharts) so you can easily see which project stucked and which is skyrocketing, after all you can share it (or via web page or by picture and so on).
 
-If you know about any good JS charts library other than Highcharts, please let me know.
+Comming soon!
+-------------- 
+* List of ignore folders.
+* Export data to pure file.
+* Date of project creation by file date.
+* GUI.
 
-TODO:
-- [x] Traversing directories
-- [x] Class Project
-- [x] Class DayAndLines
-- [x] Classify data by days.
-- [ ] Export data to file.
-- [ ] Create file with ready JS script containing all data.
-- [ ] GUI
+Crew
+-------------- 
+Main effort:
+**Michal Tajchert**
 
+Some testing & small bug fixes:
+**Kuba Radzimowski**
