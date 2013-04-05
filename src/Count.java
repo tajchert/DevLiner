@@ -12,6 +12,7 @@ public class Count {
 
 	final static String dirStart ="D://Dropbox//Documents//Android//testingDevLiner";
 	boolean deleteOld = true;
+	
 	ArrayList<Project> listOfProjects = new ArrayList<Project>();
 	
 	public static void main(String[] args) {

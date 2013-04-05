@@ -2,6 +2,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,6 +16,7 @@ public class Project implements Serializable{
 	public String description;		//Later on added description 
 	private String notes;			//Private Notes
 	private int lines = 0;			//Temporary value for counting methods (if number of lines has changed)
+	private Format  dateFormatPrecise = new SimpleDateFormat("dd/MM/YYYY");
 	
 	ArrayList<DateAndLines> datesAndLines = new ArrayList<DateAndLines>();		//Store all value of lines - save by each check
 	HashMap<String, Integer> daysAndLines = new HashMap<String, Integer>();		//Store only day and biggest value in that day of lines
@@ -27,7 +30,7 @@ public class Project implements Serializable{
 		setLineNumber(walk(Count.dirStart+"//"+name));
 	}
 	
-	private void updateMaxDailyHistory(){
+	/*private void updateMaxDailyHistory(){
 		for(DateAndLines item: datesAndLines){
 			if(daysAndLines.size()==0){
 				daysAndLines.put(item.getDate(), item.lineNumber);
@@ -45,7 +48,7 @@ public class Project implements Serializable{
 			}
 			
 			}
-	}
+	}*/
 	public void showHistoryDays(){
 		System.out.println("!"+daysAndLines);
 	}
@@ -54,8 +57,18 @@ public class Project implements Serializable{
 		lines = 0;
 		int tmp = lineNumber;
 		setLineNumber(walk(Count.dirStart+"//"+name));
-		if(tmp!= lineNumber){
-			updateMaxDailyHistory();
+		if(tmp!= lineNumber || daysAndLines.size()==0){
+			System.out.println("Change.");
+			Date date = new Date();
+			String dateDay = dateFormatPrecise.format(date);
+			if(daysAndLines==null || daysAndLines.size()==0){
+				System.out.println("Making list");
+				daysAndLines.put(dateDay, lineNumber);
+			}
+			if(daysAndLines.get(dateDay)!=lineNumber){
+				System.out.println("Making list");
+				daysAndLines.put(dateDay, lineNumber);
+			}
 		}
 	}
 	
