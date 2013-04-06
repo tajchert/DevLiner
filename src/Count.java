@@ -88,7 +88,18 @@ public class Count {
 	}
 	
 
-	
+	private boolean deleteProjects(){
+		String fileName = "ProjectList.obj";
+	    File f = new File(fileName);
+		if (!f.exists()) {
+			throw new IllegalArgumentException("Delete not performed: no such file or directory: " + fileName);
+		}
+		if (!f.canWrite()) {
+			throw new IllegalArgumentException("Delete not performed: write protected: "+ fileName);
+		}
+	    boolean success = f.delete();
+	    return success;
+	}
 	private void writeFile(){
 		try {
 			FileOutputStream saveList = new FileOutputStream("ProjectList.obj");
