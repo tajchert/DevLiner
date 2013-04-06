@@ -26,14 +26,14 @@ $(function () {
             },
             yAxis: {
                 title: {
-                    text: 'Snow depth (m)'
+                    text: 'Number of code lines'
                 },
                 min: 0
             },
             tooltip: {
                 formatter: function() {
                         return '<b>'+ this.series.name +'</b><br/>'+
-                        Highcharts.dateFormat('%e. %b', this.x) +': '+ this.y +' m';
+                        Highcharts.dateFormat('%e. %b', this.x) +': '+ this.y +' lines';
                 }
             },
             

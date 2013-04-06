@@ -10,8 +10,12 @@ import java.util.ArrayList;
 
 public class Count {
 
-	final static String dirStart ="D://Dropbox//Documents//Android//testingDevLiner";		//Directory for basic operations - r&w files
+	final static String dirStart ="D://Dropbox//workspace";		//Starting directory of projects ex. //workspace
+	
 	static ArrayList<Project> listOfProjects = new ArrayList<Project>();		//List of all projects
+	static String listOfIgnoredProjects=".metadata GestureBuilder";		//Folders added here would be ignored when making new projects
+	static String listOfIgnoredFiles=".git js .settings";		//Files and folders added here would be ignored
+	
 	boolean deleteOld = true;
 	
 	
@@ -24,7 +28,7 @@ public class Count {
 		tmpp.updateProjects(f);
 		//tmpp.getFileCount(f, 0);
 		//System.out.println(tmpp.showHistory("A"));
-		tmpp.findProject("A").showHistoryDays();
+		//tmpp.findProject("A").showHistoryDays();
 		//tmpp.findProject("A").updateMaxDailyHistory();
 		//System.out.println(tmpp.findProject("A").getProjectHistory());
 		ExporterToJS expJS = new ExporterToJS(listOfProjects);
@@ -43,7 +47,7 @@ public class Count {
 		System.out.println(listOfProjects);
 		File[] listOfFiles = f.listFiles();
 		for (File file : listOfFiles){
-            if (file.isDirectory()){
+            if (file.isDirectory() && !listOfIgnoredProjects.contains(file.getName())){
             	if(!isProjectOnList(file.getName())){
             		Project tmp = new Project(file.getName());
                 	listOfProjects.add(tmp);

@@ -84,11 +84,11 @@ public class Project implements Serializable{
 		File prjct = new File(path);
 		File[] list = prjct.listFiles();
 		for (File f : list) {
-			if (f.isDirectory()) {
+			if (f.isDirectory() && !Count.listOfIgnoredFiles.contains(f.getName())) {
 				walk(f.getAbsolutePath());
 				System.out.println("Dir:" + f.getAbsoluteFile());
 			} else {
-				System.out.println("File:" + f.getAbsoluteFile());
+				//System.out.println("File:" + f.getAbsoluteFile());
 				try {
 					lines+=count(f.getAbsoluteFile());
 				} catch (IOException e) {
