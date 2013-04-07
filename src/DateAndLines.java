@@ -8,7 +8,7 @@ import java.util.Date;
 public class DateAndLines implements Serializable{
 	public Calendar date;
 	public int lineNumber;
-	private Format  dateFormatPrecise = new SimpleDateFormat("dd/MM/YYYY");
+	private Format  dateFormatPrecise = new SimpleDateFormat("dd/MM/YYYY/HH/mm");
 	
 	public DateAndLines(Calendar date, int lines){
 		this.date = date;

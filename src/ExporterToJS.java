@@ -38,7 +38,6 @@ public class ExporterToJS {
 		//END
 		//Adding data for each project
 		Output =tmpHTML;
-		Calendar oldesOne = Calendar.getInstance();
 		int c = 0;
 		while(c < projectsList.size()){
 			//name: 'Winter 2007-2008',

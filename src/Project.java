@@ -22,11 +22,12 @@ public class Project implements Serializable{
 	private String notes;			//Private Notes
 	private int lines = 0;			//Temporary value for counting methods (if number of lines has changed)
 	private String chartData; 		//Data to present on chart
-	private Date oldest;				//allow to determine oldest file date, when walk()
-	private Date last;
+	private Date oldest;				//Temporary value - allow to determine oldest file date, when walk()
+	private Date last;					//Temporary value - allow to determine last file date, when walk()
 	public Calendar lastModifDate;
+	public String extension; 		//Only files with that extension will be counted
 	
-	private Format  dateFormatPrecise = new SimpleDateFormat("YYYY, MM, dd");
+	private Format  dateFormatPrecise = new SimpleDateFormat("YYYY, MM, dd, HH, mm");
 	
 	ArrayList<DateAndLines> datesAndLines = new ArrayList<DateAndLines>();		//Store all value of lines - save by each check
 	HashMap<String, Integer> daysAndLines = new HashMap<String, Integer>();		//Store only day and biggest value in that day of lines
@@ -39,13 +40,15 @@ public class Project implements Serializable{
 		lastModifDate = Calendar.getInstance();
 		this.name = name;
 		lines = 0;
+		extension = "";
 		setCreationDate();
 		setLastModifDate();
 		setLineNumber(walk(Count.dirStart+"//"+name));
+		
 	}
 	public void setLastModifDate(){
 		last = new Date(0);
-		walkSetModifDate();
+		walkSetModifDate(Count.dirStart+"//"+name);
 		lastModifDate.setTime(last);
 	}
 	
@@ -67,8 +70,8 @@ public class Project implements Serializable{
 			}
 		}
 	}
-	public void walkSetModifDate(){
-		File prjct = new File(Count.dirStart+"//"+name);
+	public void walkSetModifDate(String path){
+		File prjct = new File(path);
 		File[] list = prjct.listFiles();
 		
 		for (File f : list) {
@@ -76,6 +79,14 @@ public class Project implements Serializable{
 				Date fc = new Date(f.lastModified());
 				if (last.before(fc)) {
 					last = fc;
+					System.out.println(last);
+				}
+				walkSetModifDate(f.getAbsoluteFile()+"");
+			}if(!f.isDirectory()){
+				Date fc = new Date(f.lastModified());
+				if (last.before(fc)) {
+					last = fc;
+					System.out.println(last);
 				}
 			}
 		}
@@ -86,10 +97,12 @@ public class Project implements Serializable{
 	}
 	
 	public void updateLineNumber(){
+		System.out.println(daysAndLines);
 		setLastModifDate();
 		lines = 0;
 		int tmp = lineNumber;
 		setLineNumber(walk(Count.dirStart+"//"+name));
+		
 		if(tmp!= lineNumber || daysAndLines.size()==0){
 			System.out.println("Change.");
 			String dateDay = dateFormatPrecise.format(lastModifDate.getTime());
@@ -100,6 +113,7 @@ public class Project implements Serializable{
 			}
 			if(daysAndLines.get(dateDay)!=lineNumber){
 				System.out.println("Update list, from: "+tmp+ ", to: " +lineNumber);
+				//String newDate = lastModifDate
 				daysAndLines.put(dateDay, lineNumber);
 			}
 		}
@@ -114,7 +128,7 @@ public class Project implements Serializable{
 			if (f.isDirectory() && !Count.listOfIgnoredFiles.contains(f.getName())) {
 				walk(f.getAbsolutePath());
 				//System.out.println("Dir:" + f.getAbsoluteFile());
-			} else {
+			} if(f.getName().endsWith(extension)) {
 				//System.out.println("File:" + f.getAbsoluteFile());
 				try {
 					lines+=count(f.getAbsoluteFile());
@@ -136,7 +150,7 @@ public class Project implements Serializable{
 			while ((readChars = is.read(c)) != -1) {
 				empty = false;
 				for (int i = 0; i < readChars; ++i) {
-					if (c[i] == ';') {
+					if (c[i] == '\n') {
 						++count;
 					}
 				}
@@ -178,12 +192,15 @@ public class Project implements Serializable{
 		Iterator it = daysAndLines.entrySet().iterator();
 	    while (it.hasNext()) {
 	        Map.Entry pairs = (Map.Entry)it.next();
+	        
 	        listBeforeReversing.add("[Date.UTC("+pairs.getKey()+"), "+pairs.getValue()+"],\n");		//Adding to array list which is used for reversing
 	        it.remove(); // avoids a ConcurrentModificationException
 	    }
+	    System.out.println(name + ":::" +listBeforeReversing);
 	    for(int j=listBeforeReversing.size() -1;j>=0;j--){			//Reversing of output to get it in date order
 	    	chartData +=listBeforeReversing.get(j);
 	    }
+	    System.out.print(name + ":::" +chartData);
 	    //[Date.UTC(1970,  9, 27), 0   ],			//example output
 		return chartData;
 	}

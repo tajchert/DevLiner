@@ -25,6 +25,7 @@ public class Count {
 		File f = new File(dirStart);
 		tmpp.readFile();
 		tmpp.makeProjects(f);
+		tmpp.setExtension(".java");
 		tmpp.updateProjects(f);
 		//tmpp.getFileCount(f, 0);
 		//System.out.println(tmpp.showHistory("A"));
@@ -34,6 +35,7 @@ public class Count {
 		ExporterToJS expJS = new ExporterToJS(listOfProjects);
 		tmpp.writeFile();
 		expJS.createFile();
+		System.out.println(tmpp.findProject("DevLiner").datesAndLines);
 	}
 	
 	public String showHistory(String name){
@@ -41,6 +43,11 @@ public class Count {
 		Project tmp = findProject(name);
 		//res += tmp.getHistory();
 		return res;
+	}
+	public void setExtension(String ext){
+		for(Project projt : listOfProjects){
+			projt.extension = ext;
+	    }
 	}
 	
 	public void makeProjects(File f){
