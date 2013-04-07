@@ -21,7 +21,7 @@ public class DateAndLines implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Day [" + date + ", " + lineNumber+ "]";
+		return "Day [" + dateFormatPrecise.format(date.getTime()) + ", " + lineNumber+ "]";
 	}
 
 }

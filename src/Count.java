@@ -16,8 +16,8 @@ public class Count {
 	static String listOfIgnoredProjects=".metadata GestureBuilder";		//Folders added here would be ignored when making new projects
 	static String listOfIgnoredFiles=".git js .settings";		//Files and folders added here would be ignored
 	
-	boolean deleteOld = true;
-	
+	boolean deleteOld = true;			//if to delete all old values
+	boolean countAllLines = true;		//if false count only lines with ';' at the end
 	
 	
 	public static void main(String[] args) {
@@ -28,7 +28,7 @@ public class Count {
 		tmpp.updateProjects(f);
 		//tmpp.getFileCount(f, 0);
 		//System.out.println(tmpp.showHistory("A"));
-		//tmpp.findProject("A").showHistoryDays();
+		//System.out.println(tmpp.findProject("BazaPar").getProjectHistory());
 		//tmpp.findProject("A").updateMaxDailyHistory();
 		//System.out.println(tmpp.findProject("A").getProjectHistory());
 		ExporterToJS expJS = new ExporterToJS(listOfProjects);
@@ -62,6 +62,7 @@ public class Count {
             if (file.isDirectory()){
             	if(isProjectOnList(file.getName())){
             		findProject(file.getName()).updateLineNumber();
+            		 System.out.println("Updated -> "+ file.getName());
             	}
             }
         }

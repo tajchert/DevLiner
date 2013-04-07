@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.Map;
 
 
@@ -67,13 +68,15 @@ public class Project implements Serializable{
 		if(tmp!= lineNumber || daysAndLines.size()==0){
 			System.out.println("Change.");
 			Calendar date = Calendar.getInstance();
+			
 			String dateDay = dateFormatPrecise.format(date.getTime());
-			if(daysAndLines==null || daysAndLines.size()==0){
+			System.out.println(daysAndLines.get(dateDay));
+			if(daysAndLines==null || daysAndLines.size()==0 || daysAndLines.get(dateDay)==null){
 				System.out.println("Making list");
 				daysAndLines.put(dateDay, lineNumber);
 			}
 			if(daysAndLines.get(dateDay)!=lineNumber){
-				System.out.println("Making list");
+				System.out.println("Update list, from: "+tmp+ ", to: " +lineNumber);
 				daysAndLines.put(dateDay, lineNumber);
 			}
 		}
@@ -86,7 +89,7 @@ public class Project implements Serializable{
 		for (File f : list) {
 			if (f.isDirectory() && !Count.listOfIgnoredFiles.contains(f.getName())) {
 				walk(f.getAbsolutePath());
-				System.out.println("Dir:" + f.getAbsoluteFile());
+				//System.out.println("Dir:" + f.getAbsoluteFile());
 			} else {
 				//System.out.println("File:" + f.getAbsoluteFile());
 				try {
@@ -148,15 +151,18 @@ public class Project implements Serializable{
 	//GETTERS
 	
 	public String getChartData(){
-		chartData="";
+		chartData="";		//output
+		ArrayList<String> listBeforeReversing = new ArrayList<String>();		//list for reversing
 		Iterator it = daysAndLines.entrySet().iterator();
 	    while (it.hasNext()) {
 	        Map.Entry pairs = (Map.Entry)it.next();
-	        chartData += "[Date.UTC("+pairs.getKey()+"), "+pairs.getValue()+"],\n";
-	        //System.out.println(pairs.getKey() + " = " + pairs.getValue());
+	        listBeforeReversing.add("[Date.UTC("+pairs.getKey()+"), "+pairs.getValue()+"],\n");		//Adding to array list which is used for reversing
 	        it.remove(); // avoids a ConcurrentModificationException
 	    }
-	    //[Date.UTC(1970,  9, 27), 0   ],
+	    for(int j=listBeforeReversing.size() -1;j>=0;j--){			//Reversing of output to get it in date order
+	    	chartData +=listBeforeReversing.get(j);
+	    }
+	    //[Date.UTC(1970,  9, 27), 0   ],			//example output
 		return chartData;
 	}
 	public Calendar getCreationDate(){
