@@ -14,7 +14,7 @@ public class Count {
 	
 	static ArrayList<Project> listOfProjects = new ArrayList<Project>();		//List of all projects
 	static String listOfIgnoredProjects=".metadata GestureBuilder";		//Folders added here would be ignored when making new projects
-	static String listOfIgnoredFiles=".git js .settings";		//Files and folders added here would be ignored
+	static String listOfIgnoredFiles=".git js .settings bin";		//Files and folders added here would be ignored
 	
 	boolean deleteOld = true;			//if to delete all old values
 	boolean countAllLines = true;		//if false count only lines with ';' at the end

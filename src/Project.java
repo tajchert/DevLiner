@@ -6,6 +6,7 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.ListIterator;
@@ -21,6 +22,9 @@ public class Project implements Serializable{
 	private String notes;			//Private Notes
 	private int lines = 0;			//Temporary value for counting methods (if number of lines has changed)
 	private String chartData; 		//Data to present on chart
+	private Date oldest;				//allow to determine oldest file date, when walk()
+	private Date last;
+	public Calendar lastModifDate;
 	
 	private Format  dateFormatPrecise = new SimpleDateFormat("YYYY, MM, dd");
 	
@@ -32,44 +36,63 @@ public class Project implements Serializable{
 	
 	public Project(String name){
 		DateOfCreation = Calendar.getInstance();
-		
+		lastModifDate = Calendar.getInstance();
 		this.name = name;
 		lines = 0;
+		setCreationDate();
+		setLastModifDate();
 		setLineNumber(walk(Count.dirStart+"//"+name));
 	}
+	public void setLastModifDate(){
+		last = new Date(0);
+		walkSetModifDate();
+		lastModifDate.setTime(last);
+	}
 	
-	/*private void updateMaxDailyHistory(){
-		for(DateAndLines item: datesAndLines){
-			if(daysAndLines.size()==0){
-				daysAndLines.put(item.getDate(), item.lineNumber);
+	public void setCreationDate(){
+		oldest = new Date();
+		walkSetCreationDate();
+		DateOfCreation.setTime(oldest);
+	}
+	public void walkSetCreationDate(){
+		File prjct = new File(Count.dirStart+"//"+name);
+		File[] list = prjct.listFiles();
+		
+		for (File f : list) {
+			if (f.isDirectory() && !Count.listOfIgnoredFiles.contains(f.getName())) {
+				Date fc = new Date(f.lastModified());
+				if (fc.before(oldest)) {
+					oldest = fc;
+				}
 			}
-			if(daysAndLines==null){
-				daysAndLines.put(item.getDate(), item.lineNumber);
+		}
+	}
+	public void walkSetModifDate(){
+		File prjct = new File(Count.dirStart+"//"+name);
+		File[] list = prjct.listFiles();
+		
+		for (File f : list) {
+			if (f.isDirectory() && !Count.listOfIgnoredFiles.contains(f.getName())) {
+				Date fc = new Date(f.lastModified());
+				if (last.before(fc)) {
+					last = fc;
+				}
 			}
-			if(item.lineNumber!=(int)daysAndLines.get(item.getDate())){
-				System.out.println((int)daysAndLines.get(item.getDate()));
-				daysAndLines.remove(item.getDate());
-				daysAndLines.put(item.getDate(), item.lineNumber);
-				System.out.println("AA");
-				System.out.println("!"+daysAndLines);
-				//System.out.println("retrieved element: " + daysAndLines);
-			}
-			
-			}
-	}*/
+		}
+	}
+	
 	public void showHistoryDays(){
 		System.out.println("!"+daysAndLines);
 	}
 	
 	public void updateLineNumber(){
+		setLastModifDate();
 		lines = 0;
 		int tmp = lineNumber;
 		setLineNumber(walk(Count.dirStart+"//"+name));
 		if(tmp!= lineNumber || daysAndLines.size()==0){
 			System.out.println("Change.");
-			Calendar date = Calendar.getInstance();
-			
-			String dateDay = dateFormatPrecise.format(date.getTime());
+			String dateDay = dateFormatPrecise.format(lastModifDate.getTime());
 			System.out.println(daysAndLines.get(dateDay));
 			if(daysAndLines==null || daysAndLines.size()==0 || daysAndLines.get(dateDay)==null){
 				System.out.println("Making list");
@@ -85,6 +108,7 @@ public class Project implements Serializable{
 	//Important methods
 	private int walk(String path) {			//Before walk please make 'lines = 0';
 		File prjct = new File(path);
+		
 		File[] list = prjct.listFiles();
 		for (File f : list) {
 			if (f.isDirectory() && !Count.listOfIgnoredFiles.contains(f.getName())) {
@@ -136,10 +160,8 @@ public class Project implements Serializable{
 	
 	//SETTERS
 	public void setLineNumber(int lineNumber) {
-		Calendar date = Calendar.getInstance();
 		this.lineNumber = lineNumber;
-		datesAndLines.add(new DateAndLines(date, lineNumber));
-		//history.put(date, lineNumber);
+		datesAndLines.add(new DateAndLines(lastModifDate, lineNumber));
 	}
 	public void setDescription(String desc){
 		this.description = desc;
@@ -171,15 +193,19 @@ public class Project implements Serializable{
 	public String getProjectHistory(){
 		return datesAndLines+"";
 	}
-	public int getLines(){
+	public int getLines(){			//returns current number of lines
 		int res = this.lineNumber;
 		return res;
 	}
-	public int getLinesAtDate(Calendar date){//TODO
+	public int getLinesAtDay(Calendar date){		//returns number of lines at particular day
+		String dateDay = dateFormatPrecise.format(date.getTime());
 		int res = 0;
-		//int res = history.get(date);
+		if(daysAndLines.get(dateDay)!=null){
+			res = daysAndLines.get(dateDay);
+		}
 		return res;
 	}
+	
 
 	public String getNotes() {
 		return notes;
